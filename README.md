@@ -7,6 +7,21 @@ no game, PSP, audio, video or image file is distributed here.
 **Current version:** TEST 0.1 – see [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) for downloads and per-version notes, and
 [STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md) for what is confirmed and what still needs testers.
 
+## Goal
+
+The only goal of this project is to **restore the original English voices**. It does not change the game's text, translation or other content:
+the remaster's text and script stay exactly as they are. The remaster corrected typos and changed some expressions in the text
+([Nintendo Life](https://www.nintendolife.com/news/2026/07/bandai-namco-reveals-changes-and-improvements-in-tales-of-eternia-remastered)),
+so a restored line can differ slightly from the subtitle on screen.
+
+Planned for the final version: an option to **mute the voices of the skits that exist only in the remaster** (in this test build they are left as in the remaster).
+
+## Preview
+
+[Video: the restored opening and a battle (YouTube)](https://youtu.be/mdY7Q3VYdJI)
+
+*The video shows the maintainer's complete personal build, including the restored opening video. **TEST 0.1 does not include the opening video and contains only part of the rest**: the opening events (EM0200), the battle/minigame voices, the S00 hit/damage voices and the title logo. The rest is planned for a later release.*
+
 ## What it restores
 
 | Included | Not included |

@@ -20,6 +20,8 @@ Version: **TEST 0.1**. "Confirmed" means heard in game by the maintainer on one 
 - Not yet tested on other PCs, on other disc dumps, or with other antivirus software.
 
 ## Decisions
+- The project only restores voices; the remaster's text and script are not touched. A restored line may differ slightly from the on-screen text.
+- Planned (not in TEST 0.1): an option to mute the voices of skits that exist only in the remaster.
 - 33 battle cues are **muted** by decision of the maintainer: the dual / combined-skill voices that have no PSP counterpart (Reid, Meredy, Keele, Farah, Celsius, Sylph; including `vc_mer_destiny`). The exact list is every row with status `mute` in `recipe_battle.csv`.
 - `vc_kok` is untouched.
 - HCA is encoded at `Highest` quality (the original events used `high`).
