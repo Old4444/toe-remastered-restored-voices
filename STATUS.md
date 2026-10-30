@@ -25,5 +25,5 @@ Version: **TEST 0.1**. "Confirmed" means heard in game by the maintainer on one 
 - HCA is encoded at `Highest` quality (the original events used `high`).
 
 ## NOT changed
-- Events other than EM0200, camp skits, the intro video, menu and other sound-effect banks.
+- Story events after the opening section (only EM0200 is covered: the start of the game to a little after the first boss), camp skits, the intro video, menu and other sound-effect banks.
 - Voices of battle NPCs (left as in the remaster).

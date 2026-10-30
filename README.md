@@ -11,7 +11,7 @@ no game, PSP, audio, video or image file is distributed here.
 
 | Included | Not included |
 |---|---|
-| Event lines of **EM0200** (136 lines) | Other events, camp skits, the intro video |
+| Story events of the **opening of the game, from the start to a little after the first boss** (**EM0200**, 136 lines) | The rest of the game's events, camp skits, the intro video |
 | All **battle and minigame voices** used by the game's `Vo.acb` (900 cues) | Voices of battle NPCs (left as in the remaster) |
 | Battle sound-effect voices in `S00` (normal hit / damage, 32 waveforms) | Menu and other sound-effect banks |
 | Title logo: "RESTORED" with the word **TEST** (installed together with the voices) | |
