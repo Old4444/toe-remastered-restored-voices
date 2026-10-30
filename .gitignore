@@ -1,0 +1,21 @@
+# never commit game or PSP material
+psp_streams/
+wav_*/
+hca_*/
+output_*/
+backup_logo/
+*.vag
+*.wav
+*.hca
+*.iso
+*.cso
+*.bundle
+*.acb
+*.awb
+RELATORIO_TESTE.txt
+INSTALL_REPORT.txt
+__pycache__/
+dist/
+build/
+*.spec
+ToePatcher.exe
