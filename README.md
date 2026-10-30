@@ -4,8 +4,8 @@ Puts the original **PSP English voice acting** back into *Tales of Eternia Remas
 The patcher builds everything on **your PC**, from **your own** Steam game and **your own** European PSP disc image –
 no game, PSP, audio, video or image file is distributed here.
 
-**Current version:** TEST 0.1 – see [Releases](../../releases) for downloads and per-version notes, and
-[STATUS.md](STATUS.md) for what is confirmed and what still needs testers.
+**Current version:** TEST 0.1 – see [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) for downloads and per-version notes, and
+[STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md) for what is confirmed and what still needs testers.
 
 ## What it restores
 
@@ -14,11 +14,11 @@ no game, PSP, audio, video or image file is distributed here.
 | Event lines of **EM0200** (136 lines) | Other events, camp skits, the intro video |
 | All **battle and minigame voices** used by the game's `Vo.acb` (900 cues) | Voices of battle NPCs (left as in the remaster) |
 | Battle sound-effect voices in `S00` (normal hit / damage, 32 waveforms) | Menu and other sound-effect banks |
-| Optional title logo: "RESTORED" with the word **TEST** | |
+| Title logo: "RESTORED" with the word **TEST** (installed together with the voices) | |
 
 ## Install
 
-1. Download `ToePatcher.exe` from [Releases](../../releases) and put it in **its own folder** (it uses ~1 GB of temporary space).
+1. Download `ToePatcher.exe` from [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) and put it in **its own folder** (it uses ~1 GB of temporary space).
 2. Run it and choose **1 – INSTALL everything**. A window asks for your PSP `.iso` / `.cso` (European release, ULES-00176).
    The patcher checks the disc against a hash list, extracts the voices, encodes them (2–3 minutes) and installs voices **and** the title logo.
    Backups of the original files are made first.
