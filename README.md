@@ -4,6 +4,8 @@ Puts the original **PSP English voice acting** back into *Tales of Eternia Remas
 The patcher builds everything on **your PC**, from **your own** Steam game and **your own** European PSP disc image –
 no game, PSP, audio, video or image file is distributed here.
 
+*Tales of Eternia is known in the US PS1 release as Tales of Destiny II. The voices restored here come from the PSP version.*
+
 **Current version:** TEST 0.1 – see [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) for downloads and per-version notes, and
 [STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md) for what is confirmed and what still needs testers.
 
@@ -27,9 +29,11 @@ Planned for the final version: an option to **mute the voices of the skits that 
 | Included | Not included |
 |---|---|
 | Story events of the **opening of the game, from the start to a little after the first boss** (**EM0200**, 136 lines) | The rest of the game's events, camp skits, the intro video |
-| All **battle and minigame voices** used by the game's `Vo.acb` (900 cues) | Voices of battle NPCs (left as in the remaster) |
+| All **battle and minigame voices** used by the game's `Vo.acb` (900 cues) | 33 battle cues that are intentionally **muted** (combined skills and other attacks with no confirmed PSP voice; see [STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md)), and voices of battle NPCs (left as in the remaster) |
 | Battle sound-effect voices in `S00` (normal hit / damage, 32 waveforms) | Menu and other sound-effect banks |
 | Title logo: "RESTORED" with the word **TEST** (installed together with the voices) | |
+
+**Note:** 33 battle cues are intentionally silent (mostly dual/combined skills and other attacks without a confirmed PSP voice). If you hear no voice on a skill, that is expected; details in [STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md).
 
 ## Install
 
