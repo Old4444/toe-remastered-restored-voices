@@ -54,4 +54,4 @@ This repository contains only scripts, tables (cue names, indexes, gains) and ha
 ## License
 
 Own code (scripts, tables, docs): MIT, see [LICENSE](LICENSE). This license does **not** cover any game, PSP or third-party material.
-Third-party components: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Third-party components (including [VGAudio](https://github.com/Thealexbarney/VGAudio), MIT): see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

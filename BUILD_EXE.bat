@@ -22,5 +22,10 @@ if errorlevel 1 (echo BUILD FAILED & pause & exit /b 1)
 echo.
 echo Built: dist\ToePatcher.exe
 python hash_file.py dist\ToePatcher.exe
+echo.
+echo Writing the license texts of the libraries included in the .exe ^(dist\THIRD_PARTY_LICENSES.txt^)...
+python -m pip install -q pip-licenses
+python -m piplicenses --from=mixed --format=plain-vertical --with-license-file --no-license-path --packages UnityPy archspec astc-encoder-py attrs brotli etcpak lz4 numpy pillow texture2ddecoder tpk_ar fsspec packaging requests urllib3 certifi charset-normalizer idna pyinstaller pyinstaller-hooks-contrib --output-file dist\THIRD_PARTY_LICENSES.txt
+if errorlevel 1 (echo WARNING: could not generate THIRD_PARTY_LICENSES.txt) else (echo Attach dist\THIRD_PARTY_LICENSES.txt to the Release next to ToePatcher.exe.)
 echo ^(publish this SHA-256 next to the download^)
 pause
