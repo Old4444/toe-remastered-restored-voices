@@ -39,7 +39,7 @@ so a restored line can differ slightly from the subtitle on screen.
 
 ## Install
 
-1. Download **ToePatcher.exe** from [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) and put it in **its own folder** (about 1 GB of temporary space is used).
+1. **Download `ToePatcher.exe`** from the [latest Release](https://github.com/Old4444/toe-remastered-restored-voices/releases/latest): open it and click `ToePatcher.exe` in the **Assets** list at the bottom (not "Source code"). Put it in **its own folder** (about 1 GB of temporary space is used).
 2. *(Only for option 1)* Download an LGPL build of **ffmpeg** for Windows – for example `ffmpeg-n9.0-latest-win64-lgpl-9.0.zip` from
    [BtbN/FFmpeg-Builds](https://github.com/BtbN/FFmpeg-Builds/releases/latest) (choose `win64`, **not** `winarm64`). **You only need one file:** extract the zip, take `bin\ffmpeg.exe` and put that `ffmpeg.exe` **right next to `ToePatcher.exe`** (the other files in the zip are not needed). If you prefer, leave it anywhere and select it when the patcher asks. ffmpeg is **not included** in this download.
 3. Run `ToePatcher.exe` and choose:
