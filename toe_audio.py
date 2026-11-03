@@ -49,7 +49,7 @@ def eventos(ps, out):
     return n
 
 def s00(ps, rec, out):
-    """32 S00 waveforms (normal hit / damage) from b_us."""
+    """36 S00 waveforms (normal hit / damage) from b_us."""
     os.makedirs(out, exist_ok=True); n = 0
     for r in csv.DictReader(open(rec, encoding='utf-8-sig')):
         vag = open(os.path.join(ps, 'b_us', 'b_us_%04d.vag' % int(r['index'])), 'rb').read()

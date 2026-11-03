@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""toe_patcher.py - single entry point of the Tales of Eternia Remastered "Restored English Voices" TEST patcher.
+"""toe_patcher.py - single entry point of the Tales of Eternia Remastered "Restored English Voices" patcher.
 Run it with Python (python toe_patcher.py) or as the compiled ToePatcher.exe. It only uses YOUR files:
 your Steam game and your own PSP disc image. Nothing is uploaded; nothing is distributed.
-Command line (optional):  toe_patcher.py prepare "game.iso" | install | install-voices | restore | status | logo-install | logo-restore | clean
+Command line (optional):  toe_patcher.py install [--no-mute] [--opening] [--no-movies] [--disc FILE] [--ffmpeg FILE] [--game FOLDER] | restore | status | prepare "game.iso" | install-voices | logo-install | logo-restore | clean
 """
 import os, sys, shutil, subprocess, hashlib
 from concurrent.futures import ThreadPoolExecutor
@@ -10,8 +10,8 @@ from toe_paths import RES, WORK
 sys.path.insert(0, RES)
 
 VGAUDIO_SHA = '0f3bda1bf2dc2421756a16c05769430e4881876deb4eab40ca47b31009173e2b'
-EXPECTED = (('wav_battle', 'hca_battle', 900), ('wav_events', 'hca_events', 136), ('wav_s00', 'hca_s00', 32))
-TEMP_DIRS = ('psp_streams', 'wav_battle', 'wav_events', 'wav_s00', 'hca_battle', 'hca_events', 'hca_s00', 'output_patch', 'output_logo')
+import toe_voices090 as V090
+TEMP_DIRS = ('output_movies', 'work_opening', 'psp_streams', 'wav_battle', 'wav_events', 'wav_h', 'wav_s00', 'hca_battle', 'hca_events', 'hca_h', 'hca_s00', 'output_patch', 'output_logo')
 
 def call(fn, *args):
     """Runs a module's main() with the given command-line arguments."""
@@ -20,6 +20,9 @@ def call(fn, *args):
     except SystemExit as e: r = e.code
     finally: sys.argv = old
     return 0 if r in (None, 0, False) else (r if isinstance(r, int) else 1)
+
+DISC = None
+FFMPEG = None
 
 def pick_disc():
     try:
@@ -34,6 +37,12 @@ def pick_disc():
         pass
     return input('Type or drag your PSP .iso/.cso file here and press Enter: ').strip().strip('"')
 
+def get_disc(d=None):
+    global DISC
+    if d: DISC = d.strip().strip('"')
+    if not DISC: DISC = pick_disc().strip().strip('"')
+    return DISC
+
 def vgaudio():
     p = os.environ.get('TOE_VGAUDIO') or os.path.join(RES, 'tools', 'VGAudioCli.exe')
     if not os.path.isfile(p): print('ERROR: tools\\VGAudioCli.exe not found.'); return None
@@ -45,23 +54,12 @@ def vgaudio():
 def encode_all():
     v = vgaudio()
     if not v: return False
-    jobs = []
-    for w, h, _ in EXPECTED:
-        os.makedirs(os.path.join(WORK, h), exist_ok=True)
-        for f in sorted(os.listdir(os.path.join(WORK, w))):
-            if f.lower().endswith('.wav'): jobs.append((os.path.join(WORK, w, f), os.path.join(WORK, h, f[:-4] + '.hca')))
-    flags = getattr(subprocess, 'CREATE_NO_WINDOW', 0)
-    def one(j):
-        r = subprocess.run([v, '-i', j[0], '-o', j[1], '--hcaquality', 'Highest'], capture_output=True, creationflags=flags)
-        return r.returncode == 0 and os.path.isfile(j[1])
-    print('Encoding %d files to HCA (a few minutes)...' % len(jobs))
-    with ThreadPoolExecutor(max_workers=max(1, min(4, os.cpu_count() or 1))) as ex: res = list(ex.map(one, jobs))
-    bad = len(res) - sum(res)
+    bad = V090.encode(v)
     if bad: print('ERROR: %d files failed to encode (VGAudioCli needs .NET Framework 4.5.1+ on Windows).' % bad); return False
     return True
 
 def counts():
-    return [(h, len([f for f in os.listdir(os.path.join(WORK, h)) if f.endswith('.hca')]) if os.path.isdir(os.path.join(WORK, h)) else 0, n) for _, h, n in EXPECTED]
+    return V090.counts()
 
 def prepared():
     return all(c == n for _, c, n in counts())
@@ -71,17 +69,24 @@ def prepare(disc=None):
     if prepared():
         a = input('A previous preparation was found. Reuse it? [Y/n] ').strip().lower()
         if a in ('', 'y', 'yes'): return True
-    disc = (disc or pick_disc()).strip().strip('"')
+    disc = get_disc(disc)
     if not disc or not os.path.isfile(disc): print('ERROR: file not found: ' + disc); return False
     print('\nSTEP 1/3 - extracting the voices from your disc image')
     if call(toe_psp.main, disc, os.path.join(WORK, 'psp_streams')): print('Stopped.'); return False
     print('\nSTEP 2/3 - decoding and applying the recipes')
-    if call(toe_audio.main): print('Stopped.'); return False
+    av = V090.prepare_wavs()
+    if av: print('  note: %d decoded files differ from the reference fingerprints (different disc dump?). Continuing.' % av)
     print('\nSTEP 3/3 - encoding')
     if not encode_all(): return False
     for h, c, n in counts(): print('  %-11s %4d files (expected %d)%s' % (h, c, n, '' if c == n else '  <-- MISMATCH'))
     return prepared()
 
+
+def build_only(iso, orig_dir, out):
+    """Test helper: prepare + build the banks into OUT without touching the game."""
+    import toe_build
+    if not prepare(iso): return 1
+    return call(toe_build.main, orig_dir, out)
 
 def install(*extra):
     import toe_install
@@ -128,46 +133,119 @@ def logo_safe(cmd, *extra):
     try: return logo(cmd, *extra)
     except Exception as e: print('Logo step failed: %s' % e); return 1
 
-def install_all(*extra):
-    rv = install(*extra)
-    if rv: print('\nThe voices were NOT installed, so the logo step was skipped.'); return rv
+def parse_opts(args):
+    o = {'mute': True, 'opening': False, 'movies': True, 'disc': None, 'ffmpeg': None}; rest = []; it = iter(args)
+    for x in it:
+        if x == '--no-mute': o['mute'] = False
+        elif x == '--opening': o['opening'] = True
+        elif x == '--no-movies': o['movies'] = False
+        elif x == '--disc': o['disc'] = next(it)
+        elif x == '--ffmpeg': o['ffmpeg'] = next(it)
+        else: rest.append(x)
+    return o, rest
+
+def pick_game():
+    """Asks for the game folder (window; falls back to typing) until it contains the game's sound folder."""
+    import toe_install
+    ok = lambda g: bool(g) and os.path.isdir(os.path.join(g, toe_install.REL))
+    while True:
+        print('\nCould not find the game automatically. Select the game folder (the one named "%s" that contains "%s_Data").' % (toe_install.GAME, toe_install.GAME))
+        g = ''
+        try:
+            import tkinter
+            from tkinter import filedialog
+            root = tkinter.Tk(); root.withdraw(); root.attributes('-topmost', True)
+            g = filedialog.askdirectory(title='Select the Tales of Eternia Remastered game folder'); root.destroy()
+        except Exception:
+            g = input('Paste the game folder path: ').strip().strip('"')
+        g = os.path.normpath(g) if g else ''
+        if ok(g): return g
+        if not g: g = input('Paste the game folder path (empty = cancel): ').strip().strip('"')
+        if not g: raise SystemExit('Cancelled: game folder not selected.')
+        if ok(g): return g
+        print('That folder does not contain %s. Try again.' % toe_install.REL)
+
+def resolve_game(rest):
+    import toe_install
+    if '--game' in rest: return rest[rest.index('--game') + 1].strip().strip('"'), rest
+    g = toe_install.achar_jogo() or pick_game()
+    return g, rest + ['--game', g]
+
+def install_all(*args):
+    import toe_install, toe_extras
+    o, rest = parse_opts(list(args)); game, rest = resolve_game(rest)
+    v = vgaudio()
+    if not v: return 1
+    if o['disc']: get_disc(o['disc'])
+    ff = None
+    if o['movies'] or o['opening']:
+        ff = o['ffmpeg'] or toe_extras.find_ffmpeg()
+        if not ff:
+            print('\nffmpeg was not provided, so NOTHING was installed. Place the ffmpeg folder next to this program and run again, or choose "INSTALL without videos" in the menu.'); return 1
+    toe_install.MUTE = o['mute']; toe_install.VGAUDIO = v
+    print('\nOptions: mute remaster-only skits = %s | cutscene movie audio = %s | restored opening = %s | title-logo change = always' % tuple('ON' if x else 'off' for x in (o['mute'], o['movies'], o['opening'])))
+    print('\n--- Voices ---')
+    rv = install(*rest)
+    if rv: print('\nThe voices were NOT installed, so the other steps were skipped.'); return rv
     print('\n--- Title logo ---')
-    rl = logo_safe('install', *extra)
-    print('\nSUMMARY:  voices INSTALLED  |  logo %s' % ('INSTALLED' if rl == 0 else 'NOT installed (see the message above; the voices are fine)'))
+    rl = logo_safe('install', *rest)
+    rm = ro = None
+    if ff and o['movies']:
+        print('\n--- Cutscene movie audio (01, 15, 24) ---')
+        try: rm = toe_extras.install_movies(game, get_disc(), ff, v)
+        except Exception as e: print('Movie step failed: %s' % e); rm = 1
+    if ff and o['opening']:
+        print('\n--- Restored opening (takes several minutes) ---')
+        try: ro = toe_extras.install_opening(game, get_disc(), ff, v)
+        except Exception as e: print('Opening step failed: %s' % e); ro = 1
+    st = lambda r, name: '%s %s' % (name, 'skipped' if r is None else ('OK' if r == 0 else 'FAILED (see above)'))
+    print('\nSUMMARY:  voices OK | %s | %s | %s | %s' % ('skits muted' if o['mute'] else 'skits kept', st(rl, 'logo'), st(rm, 'movies'), st(ro, 'opening')))
     return 0
 
-def restore_all(*extra):
-    import toe_install
-    rv = call(toe_install.main, 'restore', *extra)
+def restore_all(*args):
+    import toe_install, toe_extras
+    o, rest = parse_opts(list(args)); game, rest = resolve_game(rest)
+    rv = call(toe_install.main, 'restore', *rest)
     print('\n--- Title logo ---')
-    if os.path.isdir(os.path.join(WORK, 'backup_logo')): rl = logo_safe('restore', *extra)
+    if os.path.isdir(os.path.join(WORK, 'backup_logo')): rl = logo_safe('restore', *rest)
     else: print('No logo backup found next to this program; the logo was left as it is.'); rl = 0
-    print('\nSUMMARY:  voices %s  |  logo %s' % ('RESTORED' if rv == 0 else 'NOT restored (see above)', 'RESTORED / untouched' if rl == 0 else 'NOT restored (see above)'))
-    return rv or rl
+    print('\n--- Cutscene movies and opening ---')
+    rm = toe_extras.restore_movies(game); ro = toe_extras.restore_opening(game)
+    print('\nSUMMARY:  voices %s | logo %s | movies %s | opening %s' % tuple('RESTORED' if r == 0 else 'NOT restored (see above)' for r in (rv, rl, rm, ro)))
+    return rv or rl or rm or ro
 
 def status(*extra):
-    import toe_install
+    import toe_install, toe_extras
     rv = call(toe_install.main, 'status', *extra)
     print('  title logo backup: ' + ('exists (logo was installed by this tool)' if os.path.isdir(os.path.join(WORK, 'backup_logo')) else 'none'))
+    try:
+        md = toe_extras.movie_dir(resolve_game(list(extra))[0]); fl = os.listdir(md)
+        print('  movie backups: ' + (', '.join(sorted(f[:-8] for f in fl if f.endswith(toe_extras.SUF_VID))) or 'none') + ' | opening backup: ' + ('exists' if 'op.pmf.dat' + toe_extras.SUF_OP in fl else 'none'))
+    except Exception: pass
     return rv
 
 MENU = '''
- TALES OF ETERNIA REMASTERED - RESTORED VOICES (TEST)
- ---------------------------------------------------
-  1  INSTALL everything: voices + title logo "TEST"   (recommended; backups first)
-  2  RESTORE everything (voices + logo) to the originals
-  3  Status
-  4  Install the voices only
-  5  Install the title logo only
-  6  Delete temporary files (extracted PSP audio, WAV/HCA)
+ TALES OF ETERNIA REMASTERED - RESTORED ENGLISH VOICES
+ -----------------------------------------------------
+  1  INSTALL - complete: voices + title logo + cutscene movies + original opening
+            (needs ffmpeg and takes several minutes)
+  2  INSTALL - without videos: voices + title logo only (no ffmpeg needed)
+  3  RESTORE everything to the originals
+  4  Status
+  5  Delete temporary files (extracted PSP audio, WAV/HCA)
   0  Exit
 '''
+
+def ask_yn(q, default):
+    r = input('%s [%s] ' % (q, 'Y/n' if default else 'y/N')).strip().lower()
+    return default if not r else r in ('y', 'yes', 's', 'sim')
 
 def main():
     a = sys.argv[1:]
     if a:
         c, rest = a[0], a[1:]
         if c == 'prepare': return 0 if prepare(rest[0] if rest else None) else 1
+        if c == 'build': return build_only(*rest)
         if c == 'install': return install_all(*rest)
         if c == 'install-voices': return install(*rest)
         if c == 'restore': return restore_all(*rest)
@@ -179,12 +257,14 @@ def main():
     while True:
         print(MENU)
         k = input('Choose: ').strip()
-        if k == '1': install_all()
-        elif k == '2': restore_all()
-        elif k == '3': status()
-        elif k == '4': install()
-        elif k == '5': logo_safe('install')
-        elif k == '6': clean()
+        if k in ('1', '2'):
+            extra = []
+            if not ask_yn('Mute the new skits that only exist in the remaster (they have no English PSP voice)?', True): extra.append('--no-mute')
+            extra += ['--opening'] if k == '1' else ['--no-movies']
+            install_all(*extra)
+        elif k == '3': restore_all()
+        elif k == '4': status()
+        elif k == '5': clean()
         elif k == '0': return 0
         input('\nPress Enter to continue...')
 

@@ -31,3 +31,7 @@ awb_id,waveform,bank,index,psp_name,gain,expected_samples,cues,status
 571,176,b_us,244,Keele_088,1.0,14588,RE_SE_BTV_012;SE_BTV_012,BY_LINEAGE_AND_DURATION(no correlation yet); group approved in game by the maintainer
 572,171,b_us,167,Farah52,1.0,10640,RE_SE_BTV_007;SE_BTV_007,BY_LINEAGE_AND_DURATION(no correlation yet); group approved in game by the maintainer
 573,172,b_us,169,Farah54,1.0,18984,RE_SE_BTV_008;SE_BTV_008,BY_LINEAGE_AND_DURATION(no correlation yet); group approved in game by the maintainer
+488,189,b_us,512,b_us_0512,1.0,8876,RE_SE_BTV_025;SE_BTV_025,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer
+489,190,b_us,513,Max_023,1.0,18536,RE_SE_BTV_026;SE_BTV_026,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer
+562,191,b_us,514,Max_024,1.0,12824,RE_SE_BTV_027;SE_BTV_027,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer
+563,192,b_us,515,Max_025,1.0,19432,RE_SE_BTV_028;SE_BTV_028,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer

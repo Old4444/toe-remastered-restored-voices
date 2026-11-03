@@ -9,6 +9,8 @@ from toe_paths import RES, WORK
 import toe_build as B
 ORIG = B.ORIG
 SUF = '.PRE_PATCH_TEST'
+MUTE = False      # set by the patcher: silence the remaster-only skits
+VGAUDIO = None
 ARQS = ('Vo.acb', 'Vo.awb', 'toe_psp_se_bank_S00.acb')
 GAME = 'Tales of Eternia Remastered'
 REL = os.path.join(GAME + '_Data', 'StreamingAssets', 'Sound', 'en')
@@ -94,6 +96,11 @@ def main():
     print('Building the banks (about 30 s)...')
     sys.argv = ['toe_build.py', orig_dir or snd, saida]
     if B.main() != 0: print('Build failed. The game was not changed.'); return 1
+    if MUTE:
+        import toe_extras
+        print('Muting the remaster-only skits...')
+        try: toe_extras.mute_skits(saida, VGAUDIO)
+        except Exception as e: print('Muting failed (%s). The game was not changed.' % e); return 1
     for s in ARQS:
         bk = os.path.join(snd, s + SUF)
         if not os.path.isfile(bk): shutil.copy2(os.path.join(snd, s), bk)

@@ -2,21 +2,20 @@
 chcp 65001 >nul
 cd /d "%~dp0"
 rem Builds ToePatcher.exe on YOUR computer from the readable source in this folder.
-rem   BUILD_EXE.bat        = full build (includes the title-logo option; large file)
-rem   BUILD_EXE.bat lite   = without the logo option (small file)
+rem   One single program: voices, title-logo change, cutscene movie audio, mute of the new skits, optional restored opening.
 where python >nul 2>nul
 if errorlevel 1 (echo ERROR: Python not found. & pause & exit /b 1)
 set EXTRA=--collect-all UnityPy --collect-all archspec --collect-all astc_encoder --exclude-module fmod_toolkit --exclude-module pyfmodex
 set PKGS=pyinstaller numpy UnityPy pillow
-if /i "%~1"=="lite" (
-  set EXTRA=--exclude-module numpy --exclude-module PIL --exclude-module UnityPy
-  set PKGS=pyinstaller
-)
 python -m pip install -q %PKGS%
 if errorlevel 1 (echo pip failed & pause & exit /b 1)
 python -m PyInstaller --noconfirm --clean --onefile --console --name ToePatcher --paths lib ^
  --hidden-import utf --hidden-import afs2 --hidden-import afs2b --hidden-import enc_vga --hidden-import hcadec --hidden-import seyfert ^
- --add-data "recipe_battle.csv;." --add-data "recipe_s00.csv;." --add-data "events_em0200.csv;." ^
+ --hidden-import toe_extras --hidden-import toe_videos --hidden-import toe_abertura --hidden-import usm_own --hidden-import usm_templates ^
+ --hidden-import toe_voices090 --hidden-import toe_build --hidden-import build090 --hidden-import toe_install --hidden-import toe_logo ^
+ --hidden-import toe_psp --hidden-import toe_audio --hidden-import psx_decode ^
+ --add-data "RECEITA_EVENTOS.csv;." --add-data "RECEITA_H.csv;." --add-data "RECEITA_BATALHA_090.csv;." --add-data "recipe_s00.csv;." ^
+ --add-data "RECEITA_VIDEOS_090.csv;." --add-data "edl_final.json;." ^
  --add-data "fonts;fonts" --add-data "tools;tools" %EXTRA% toe_patcher.py
 if errorlevel 1 (echo BUILD FAILED & pause & exit /b 1)
 echo.

@@ -1,11 +1,14 @@
 import struct,subprocess,os
-def crc16(b):
+def _mk_crc_tbl():
     t=[]
     for i in range(256):
         c=i<<8
         for _ in range(8): c=((c<<1)^0x8005) if c&0x8000 else c<<1
         t.append(c&0xFFFF)
-    c=0
+    return t
+_CRC_TBL=_mk_crc_tbl()   # tabela criada uma vez (antes era refeita a cada chamada; resultado identico)
+def crc16(b):
+    t=_CRC_TBL; c=0
     for x in b: c=((c<<8)&0xFFFF)^t[(c>>8)^x]
     return c
 def tbl(key):

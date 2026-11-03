@@ -23,5 +23,9 @@ title-logo option. Licenses as reported by the build environment (the full texts
 The list above is a superset of what the .exe really embeds (it was generated from the build environment).
 This table is a convenience summary; `THIRD_PARTY_LICENSES.txt` is the authoritative text.
 
+## Not included (external, user-provided)
+- **FFmpeg** - used only if you choose the complete install (cutscene movies and opening). It is **not** distributed here; you download an LGPL build yourself (e.g. BtbN/FFmpeg-Builds) and the patcher runs it as a separate program. https://ffmpeg.org
+- **CriCodecs** (Youjose) - used only in early tests; not part of the patcher. The author allowed free use/redistribution (GitHub issue #25, 2026-11-01).
+
 ## Trademarks
 *Tales of Eternia* and related material belong to their owners. This project is unofficial.

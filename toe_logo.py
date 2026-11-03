@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""toe_logo.py - title-screen logo: RESTORED + "TEST" instead of the version text, compass ball at 75 percent.
+"""toe_logo.py - title-screen logo: RESTORED + "v0.9.0" instead of the version text, compass ball at 75 percent.
 Usage: python toe_logo.py generate|install|restore [--game "folder"]
 Needs: pip install numpy UnityPy pillow (on your computer only; nothing is distributed).
 Reads the ORIGINAL textures from your own game bundles; no game image is included in this package.
@@ -10,10 +10,11 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from toe_paths import RES, WORK
 sys.path.insert(0, os.path.join(RES, 'lib'))
 from seyfert import transform as bola
-TEXTO = 'TEST'
+TEXTO = 'v0.9.0'
 IDS = ['0x0801004f', '0x08010050', '0x08010051', '0x08010052', '0x08010053', '0x08010054', '0x08010057']
 ID_BOLA = '0x08010058'
-ORIG = {'0x0801004f': 'eda769d6ba278fe54a6e90893b2f07f39035536643dfdc053981ce67f02670b3', '0x08010050': '132beafa709464b8baae69001f77fb1095f2b7bda2e5f44501ca21e94a6131ed', '0x08010051': '3afcc5967b20c83bbe42843eda7ab6ef6b2297ba6b77076844072fc817e7fbed', '0x08010052': 'd02a439dca3adde0680deaa50eec9abdf38f57f5629b02b0dad0da61744527db', '0x08010053': 'cfac4216d180098d3868ae04c38552cd1cfbdbb3f3308ab8c4768730cff6613f', '0x08010054': '3c8bfd9719e9a0bb4456a8981ed0d90b8f3737df16fe5440089639af628daa48', '0x08010057': 'dcb19384e146d3a7a8a9cb8e84ded345d0ce7dd89aab96a1b9fabd71d6f4aceb', '0x08010058': '91a4facf91da583b83a1b492e4d9eb3d991b01be50aa2e09724e2ce271bb53ac'}
+# hashes dos pacotes ORIGINAIS: (jogo 2.0.0, jogo 2.1.0). O de 2.1.0 foi tirado dos arquivos atualizados pela Steam em 2026-11-02 (nao verificado por 'Verificar integridade').
+ORIG = {'0x0801004f': ('eda769d6ba278fe54a6e90893b2f07f39035536643dfdc053981ce67f02670b3', '946307a5770724adecf8a4ae51f21ef02dad677757cb8fce798f4118ee7afb98'), '0x08010050': ('132beafa709464b8baae69001f77fb1095f2b7bda2e5f44501ca21e94a6131ed', 'ff19273f5f9cbce8dd6c183ff62c8251f58853d7f66ee0988aaac0647a433862'), '0x08010051': ('3afcc5967b20c83bbe42843eda7ab6ef6b2297ba6b77076844072fc817e7fbed', '7dfd2574305885985b8695dd48737ffd3395abd908ff4ba00c7f856426d533e2'), '0x08010052': ('d02a439dca3adde0680deaa50eec9abdf38f57f5629b02b0dad0da61744527db', 'f14acd6f124a783179ba9b362d64349ff53cd76ee1336a0110997f93cd8e6d74'), '0x08010053': ('cfac4216d180098d3868ae04c38552cd1cfbdbb3f3308ab8c4768730cff6613f', '71f6ed6c70f78f98fd7fb29ffbdbe463edebe979e01de80c6e87d7767b164ff8'), '0x08010054': ('3c8bfd9719e9a0bb4456a8981ed0d90b8f3737df16fe5440089639af628daa48', '7dfb8e1afdaf65e810ed1551349070784c27819492c4a43f21170d73526f0de7'), '0x08010057': ('dcb19384e146d3a7a8a9cb8e84ded345d0ce7dd89aab96a1b9fabd71d6f4aceb', '9856e2f8948d99abb36e45bb3e7fa90bf540bf95f4bb3bac63077bec2425f4f6'), '0x08010058': ('91a4facf91da583b83a1b492e4d9eb3d991b01be50aa2e09724e2ce271bb53ac', 'ea3ada894856eaa137acf7927e7695084fcfa978a5745092f1e542195a94e1c4')}
 AA = os.path.join('Tales of Eternia Remastered_Data', 'StreamingAssets', 'aa', 'StandaloneWindows64')
 BK = os.path.join(WORK, 'backup_logo'); OUT = os.path.join(WORK, 'output_logo')
 
@@ -80,14 +81,14 @@ def main():
         n = 0
         for i in IDS + [ID_BOLA]:
             fs = glob.glob(os.path.join(BK, 'group_residenttexture_texture_assets_%s_*.bundle' % i))
-            if len(fs) == 1 and sha_arq(fs[0]) == ORIG[i]:
+            if len(fs) == 1 and sha_arq(fs[0]) in ORIG[i]:
                 shutil.copy2(fs[0], os.path.join(aa, os.path.basename(fs[0]))); n += 1
         print('Bundles restored from backup: %d of 8.' % n); return 0 if n else 1
     fontes = {}
     for i in IDS + [ID_BOLA]:
         p = achar_pacote(aa, i)
         if not p: print('ERROR: bundle %s not found (different game version?).' % i); return 1
-        if sha_arq(p) != ORIG[i]:
+        if sha_arq(p) not in ORIG[i]:
             print('STOPPED: bundle %s is not the original (logo already changed or another game version).' % i)
             print('If this patch did it, use "restore". Otherwise verify the game files in Steam and try again.'); return 1
         fontes[i] = p
@@ -120,7 +121,7 @@ def main():
     for i in IDS + [ID_BOLA]:
         b = os.path.join(BK, os.path.basename(fontes[i]))
         if not os.path.exists(b): shutil.copy2(fontes[i], b)
-        if sha_arq(b) != ORIG[i]: print('Invalid backup; aborted.'); return 1
+        if sha_arq(b) not in ORIG[i]: print('Invalid backup; aborted.'); return 1
     for i in IDS + [ID_BOLA]:
         shutil.copy2(os.path.join(OUT, os.path.basename(fontes[i])), fontes[i])
     print('LOGO INSTALLED (8 bundles). Backups in ' + BK + '. Restart the game to see it.'); return 0
