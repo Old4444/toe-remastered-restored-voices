@@ -10,7 +10,7 @@ Most of the changes in this patch were tested on game version **2.0.0**. After t
 - The title-logo texture files were renamed and changed by the update, so the logo step written for 2.0.0 no longer matched. It was adapted for 2.1.0 and works in the maintainer's tests.
 - 2.1.0 adds an "Arte Shortcut" feature and fixes some battle effects. How they interact with the restored battle voices (for example the shortcut lines) is unknown.
 
-If you notice anything different after the update, please open an Issue.
+If you notice anything different after the update, you can open an Issue to document it. I may use reports to guide future work as time and resources allow.
 
 ## Confirmed
 - Story events and the camp skits H001–H079 play the PSP English voice (including the skit "Joining Chat crew", which used to freeze the game and was fixed).
@@ -35,7 +35,7 @@ If you notice anything different after the update, please open an Issue.
 - Aurora Sword is a 3-stage technique (only 2 stages in normal play). In the remaster, Reid gives a faint little shout at the Aurora Wall stage before the technique fires (not a spoken word; it is not one of the `SE_ACT_KYOKKO*` effects, which were listened to and ruled out).
 - In the PSP version, he says "Now!" and then the Aurora Sword fires. That part is already corrected.
 - Still unreplaced: the faint shout before Aurora Wall. Whether the PSP has a shout there at all is unverified (needs checking in the PSP game). No Vo cue for Aurora Wall was found. If the PSP has none, it may stay as is.
-- Do not change anything until the PSP is checked. If you know, please open an Issue.
+- Do not change anything until the PSP is checked. If you have information about this, you can share it in an Issue; it may help guide future investigation.
 
 ### Other items left as the remaster voice (0.9.0) (tester check pending)
 - **"Summon demon" skill** (`vc_shi_summondemon` and any other character that uses it, e.g. Shizel and Shadow; the full list of users is not verified): every instance keeps the remaster audio, because no equivalent was found in the PSP version (not fully verified). The decision applies to all characters. In play it did not break immersion in the fights against Shizel and Shadow.
@@ -58,7 +58,7 @@ If you notice anything different after the update, please open an Issue.
 - `vc_mer_destiny` is **muted** (no line in the PSP). Double strikes (unison) are **muted** (also silent on PSP/PS1).
 - Skits that exist only in the remaster (new in the remaster, 295 cues) have no English PSP voice; there is an **option to mute them** (on by default). Side effect: in those skits the characters' mouths stay closed and some expressions may look odd; answer "no" to the question during installation to keep the remaster voice.
 - `vc_shi_delay` stays with the remaster voice (no equivalent PSP line).
-- 33 battle cues remain intentionally muted (see `RECEITA_BATALHA_090.csv`, rows with `origem` = `mudo`); if you know the original PSP voice for any, please open an Issue.
+- 33 battle cues remain intentionally muted (see `RECEITA_BATALHA_090.csv`, rows with `origem` = `mudo`); if you know the original PSP voice for any, you can share it in an Issue; it may help guide future investigation.
 - HCA frames are kept at 512 bytes or less everywhere (camp skits at 341 bytes, like the originals). Larger frames (up to 1486 bytes) froze one skit during testing.
 
 ## Celsius – choices made
@@ -67,7 +67,7 @@ Chosen by the maintainer for this version; the voice may still change later.
 - `vc_cel_blizzard` and `vc_cel_koore` are **cuts of PSP clips**, a subjective choice: `blizzard` uses only the first 0.81 s of the clip it shares with `spell00` (50 ms fade-out); `koore` uses the first 0.55 s of the clip it shares with `freezelancer` (30 ms fade-out).
 - **19 Celsius cues keep the remaster voice**: `iceneedle`, `shishisenkou`, `shouteiha`, `shou`, `soudoushouteiha`, `soudou`, `sazanka`, `seiseiseiya`, `sankamoushuukyaku`, `rengadan`, `hachiyourenga`, `hienrenkyaku`, `hienrentenkyaku`, `garyoukuuha`, `yousoushuugeki`, `yousourakubakushuu`, `ikkatsu`, `tenketsubakutai`, `hiyouhonpo`.
 - One PSP Celsius line (`celcius_09`, b_us index 846) is not used by any cue; it is not known which attack it belongs to, so it is left unused for now.
-- If you remember a PSP line that should replace one of these, please open an Issue.
+- If you remember a PSP line that should replace one of these, you can share it in an Issue; it may help guide future investigation.
 ## Hyades – damage voices (0.9.0, confirmed by the maintainer)
 - `vc_hia_damage00` (PSP `b_us` 707) and `vc_hia_dead00` (PSP `b_us` 706, "Gah!") are Hyades' two ordinary hit grunts. `vc_hia_dead00` used to use `b_us` 708 ("Not possible!"), which sounded wrong for an ordinary hit; it was changed to 706.
 - The "Impossible" line is now heard only on very strong hits (a critical or a heavy blow). That is `vc_hia_dead01`, which was **not replaced** and keeps the remaster voice. In play this fits the moment well.

@@ -15,7 +15,7 @@ no game, PSP, audio, video or image file is distributed here.
 Version 0.9.0 is the first stable release of this project, but it is **not** meant to be a definitive or 100% accurate restoration.
 The project is partly driven by childhood memories of the original game. Extensive research, file analysis and in-game testing went into it,
 but some details may still be inaccurate or incomplete: there may be voice lines, mappings or other original-version details that have not been identified or verified yet.
-The goal is to get as close as possible to the original English voice experience, and to keep correcting it as people report what they find.
+The goal is to get as close as possible to the original English voice experience, and to improve the restoration as much as I can with the time and resources available.
 
 ## What it restores
 
@@ -66,7 +66,7 @@ Most of the work was tested on game version **2.0.0**. The game updated to **2.1
 - On a clean 2.1.0 install, the original `Vo.acb`, `Vo.awb` and `toe_psp_se_bank_S00.acb` are byte-identical to the 2.0.0 ones (SHA-256 compared), so the voice part should not be affected.
 - The title-logo files were renamed and changed by the update; the logo step was adapted for 2.1.0.
 
-If you notice anything different, please open an Issue.
+If you notice anything different after the update, you can open an Issue. Reports may help inform future updates.
 
 ## Notice about AI
 
@@ -97,11 +97,11 @@ The full source code is in this repository for anyone who wants to inspect it. O
 - [VGAudio](https://github.com/Thealexbarney/VGAudio) by Alex Barney (MIT) – HCA encoding, included unmodified.
 - [CriCodecs](https://github.com/Youjose/CriCodecs) by Youjose – used early in the project for conversion tests; thanks for the permission to use it. It is not part of the patcher.
 - [FFmpeg](https://ffmpeg.org) – external program that you download yourself; not distributed here.
-- Thanks to everyone who sends bug reports and feedback.
+- Thanks to everyone who has shared bug reports and feedback; they help me improve the project when time and resources allow.
 
 ## Help testing
 
-Open an **Issue** with: what you played (scene / battle / character), what you heard, and the console output if something failed.
+Open an **Issue** with: what you played (scene / battle / character), what you heard, and the console output if something failed. Reports are welcome, though I can't promise a response or a fix.
 Short recordings of *your own* are fine; please do not upload extracted game audio.
 
 ## Legal
