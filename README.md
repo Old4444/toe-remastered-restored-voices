@@ -43,7 +43,7 @@ so a restored line can differ slightly from the subtitle on screen.
 2. *(Only for option 1)* Download an LGPL build of **ffmpeg** for Windows – for example `ffmpeg-n9.0-latest-win64-lgpl-9.0.zip` from
    [BtbN/FFmpeg-Builds](https://github.com/BtbN/FFmpeg-Builds/releases/latest) (choose `win64`, **not** `winarm64`). **You only need one file:** extract the zip, take `bin\ffmpeg.exe` and put that `ffmpeg.exe` **right next to `ToePatcher.exe`** (the other files in the zip are not needed). If you prefer, leave it anywhere and select it when the patcher asks. ffmpeg is **not included** in this download.
 3. Run `ToePatcher.exe` and choose:
-   - **1 – INSTALL, complete:** voices + title logo + cutscene movies + original opening. Needs ffmpeg and takes several minutes.
+   - **1 – INSTALL, complete:** voices + title logo + cutscene movies + original opening. Needs ffmpeg and takes about **2 to 8 minutes**, depending on your PC.
    - **2 – INSTALL, without videos:** voices + title logo only. No ffmpeg needed.
 4. A window asks for your PSP `.iso` / `.cso` (European release, ULES-00176). The patcher checks it, extracts the voices, encodes them and installs. **Backups of the original files are made first.**
 5. Start the game.
@@ -76,10 +76,17 @@ The full source code is in this repository for anyone who wants to inspect it. O
 
 ## FAQ
 
-**Why aren't the voices included?** They are copyrighted game material. The patcher extracts them from a disc image you already own, so nothing protected is uploaded here.
-**Where do I get the disc image?** I can't help with that, and I'll remove any request or link to one.
-**Does it change the text?** No. Only voices, movie/opening audio and the title logo (which is altered).
-**Some skits are silent and the characters' mouths stay closed.** Those are the skits that exist only in the remaster, muted by the installer's default setting. To hear the remaster voice in them, run the installer again and answer *no* to the "mute" question (restore first if you already installed).
+**Why aren't the voices included?**
+They are copyrighted game material. The patcher extracts them from a disc image you already own, so nothing protected is uploaded here.
+
+**Where do I get the disc image?**
+I can't help with that, and I'll remove any request or link to one.
+
+**Does it change the text?**
+No. Only voices, movie/opening audio and the title logo (which is altered).
+
+**Some skits are silent and the characters' mouths stay closed.**
+Those are the skits that exist only in the remaster, muted by the installer's default setting. To hear the remaster voice in them, run the installer again and answer *no* to the "mute" question (restore first if you already installed).
 
 ## Trust and safety
 
