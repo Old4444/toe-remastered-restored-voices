@@ -100,6 +100,7 @@ Those are the skits that exist only in the remaster, muted by the installer's de
 - **Project author:** Old4444
 - **AI-assisted development:** Claude (Anthropic) and ChatGPT (OpenAI)
 - **Testing:** u/CallMeKingDestro (Reddit) – tested the first test version and confirmed the patch works.
+- **Additional testing of the 0.9.0 installer:** a friend who preferred not to be named. Thank you!
 - **Special thanks to my wife**, who helped identify Max's attack sounds.
 - [VGAudio](https://github.com/Thealexbarney/VGAudio) by Alex Barney (MIT) – HCA encoding, included unmodified.
 - [CriCodecs](https://github.com/Youjose/CriCodecs) by Youjose – used early in the project for conversion tests; thanks for the permission to use it. It is not part of the patcher.
