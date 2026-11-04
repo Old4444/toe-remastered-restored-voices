@@ -1,6 +1,6 @@
-<p align="center"><img src="banner.png" alt="Restored English Voices for Tales of Eternia Remastered" width="100%"></p>
+<p align="center"><img src="banner.png" alt="Tales of Eternia Remastered – Original English Voice Restoration" width="100%"></p>
 
-# Tales of Eternia Remastered – Restored English Voices
+# Tales of Eternia Remastered – Original English Voice Restoration
 
 Puts the original **PSP English voice acting** back into *Tales of Eternia Remastered* (Steam).
 The patcher builds everything on **your PC**, from **your own** Steam game and **your own** European PSP disc image –
