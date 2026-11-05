@@ -20,7 +20,7 @@ The goal is to get as close as possible to the original English voice experience
 ## What it restores
 
 - **All story events:** 1,346 voice lines in 36 event groups.
-- **All camp skits:** 79 skits (H001–H079).
+- **All original skits (the hint skits that tell you where to go):** 79 skits (H001–H079).
 - **All battle and minigame voices** in the game's voice bank (`Vo.acb`): 902 cues – 869 with the PSP voice and 33 deliberately muted (no matching line, or silent on the PSP) – plus the **36 hit/damage voices** of the sound-effect bank (S00). Summons included.
 - In total, **more than 2,300 voice lines** replaced.
 - **Cutscene movies 01 (English), 15 and 24**: the sound is replaced with the PSP sound (the video is untouched).

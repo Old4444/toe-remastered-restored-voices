@@ -13,7 +13,7 @@ Most of the changes in this patch were tested on game version **2.0.0**. After t
 If you notice anything different after the update, you can open an Issue to document it. I may use reports to guide future work as time and resources allow.
 
 ## Confirmed
-- Story events and the camp skits H001–H079 play the PSP English voice (including the skit "Joining Chat crew", which used to freeze the game and was fixed).
+- Story events and the original (hint) skits H001–H079 play the PSP English voice (including the skit "Joining Chat crew", which used to freeze the game and was fixed).
 - Reid: techniques, normal attack, damage, victories. Keele and Meredy: normal attack, damage, Meredy's summons. Farah: normal attack and damage.
 - Rassius (attack, damage, skills, death). Undine, Sylph and Efreet (summons).
 - Shizel (lightning, cure, resurrection, raise dead).
@@ -59,7 +59,7 @@ If you notice anything different after the update, you can open an Issue to docu
 - Skits that exist only in the remaster (new in the remaster, 295 cues) have no English PSP voice; there is an **option to mute them** (on by default). Side effect: in those skits the characters' mouths stay closed and some expressions may look odd; answer "no" to the question during installation to keep the remaster voice.
 - `vc_shi_delay` stays with the remaster voice (no equivalent PSP line).
 - 33 battle cues remain intentionally muted (see `RECEITA_BATALHA_090.csv`, rows with `origem` = `mudo`); if you know the original PSP voice for any, you can share it in an Issue; it may help guide future investigation.
-- HCA frames are kept at 512 bytes or less everywhere (camp skits at 341 bytes, like the originals). Larger frames (up to 1486 bytes) froze one skit during testing.
+- HCA frames are kept at 512 bytes or less everywhere (original skits at 341 bytes, as in the PSP). Larger frames (up to 1486 bytes) froze one skit during testing.
 
 ## Celsius – choices made
 Chosen by the maintainer for this version; the voice may still change later.
