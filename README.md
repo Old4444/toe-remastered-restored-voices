@@ -12,7 +12,7 @@ no game, PSP, audio, video or image file is distributed here.
 
 ## About this release
 
-Version 1.0 is the **final and most complete** version of this project. The maintainer finished the game with it and tested it throughout. It is still **not** meant to be a 100% accurate restoration.
+Version 1.0 is the **final and most complete** version of this project. The author finished the game with it and tested it throughout. It is still **not** meant to be a 100% accurate restoration.
 The project is partly driven by childhood memories of the original game. Extensive research, file analysis and in-game testing went into it,
 but some details may still be inaccurate or incomplete: there may be voice lines, mappings or other original-version details that have not been identified or verified yet.
 The goal is to get as close as possible to the original English voice experience, and to improve the restoration as much as I can with the time and resources available.
