@@ -21,6 +21,22 @@ def adpcm(d):
                 s = max(-32768, min(32767, s)); o.append(s); s2 = s1; s1 = s
     return o
 
+def see_pcm(raw):
+    """Raw PS-ADPCM from S00.see (22.05 kHz, flag-7 block = silence) -> 44.1 kHz by linear interpolation (x2)."""
+    s1 = s2 = 0; o = []
+    for i in range(0, len(raw) - 15, 16):
+        if raw[i + 1] == 7: o += [0] * 28; continue
+        sh = raw[i] & 15; f0, f1 = F[min(raw[i] >> 4, 4)]
+        for b in raw[i + 2:i + 16]:
+            for n in (b & 15, b >> 4):
+                v = (n - 16 if n > 7 else n) << 12
+                s = max(-32768, min(32767, (v >> sh) + ((s1 * f0 + s2 * f1) >> 6))); o.append(s); s2 = s1; s1 = s
+    r = []
+    for k, x in enumerate(o):
+        y = o[k + 1] if k + 1 < len(o) else x
+        r += [x, (x + y) // 2]
+    return r
+
 def decodificar(vag):
     """v4 = always MONO, skip the 1st block and drop the last one; others: everything from 0x30."""
     ver = struct.unpack('>I', vag[4:8])[0]
@@ -28,8 +44,13 @@ def decodificar(vag):
     return adpcm(vag[0x30:])
 
 def gravar(p, o):
-    w = wave.open(p, 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE)
-    w.writeframes(struct.pack('<%dh' % len(o), *o)); w.close()
+    import io
+    b = io.BytesIO(); w = wave.open(b, 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE)
+    w.writeframes(struct.pack('<%dh' % len(o), *o)); w.close(); data = b.getvalue()
+    try:
+        if os.path.isfile(p) and open(p, 'rb').read() == data: return   # unchanged: keep the file and its date
+    except OSError: pass
+    open(p, 'wb').write(data)
 
 def aplicar(o, ganho, corte):
     if corte:
@@ -49,11 +70,17 @@ def eventos(ps, out):
     return n
 
 def s00(ps, rec, out):
-    """36 S00 waveforms (normal hit / damage) from b_us."""
+    """48 S00 waveforms: 36 normal hit/damage from b_us + 8 Valkyrie from S00.see (bank=see) + 12 silent (bank=mudo)."""
     os.makedirs(out, exist_ok=True); n = 0
     for r in csv.DictReader(open(rec, encoding='utf-8-sig')):
+        esp = int(r['expected_samples'])
+        if r['bank'] == 'mudo':   # slot vazio no PSP: silencio com a duracao original
+            gravar(os.path.join(out, 'S00_%s.wav' % r['awb_id']), [0] * esp); n += 1; continue
+        if r['bank'] == 'see':    # S00.see slot (sound that exists only in the PSP S00.see)
+            o = aplicar(see_pcm(open(os.path.join(ps, 'see', 'see_%03d.bin' % int(r['index'])), 'rb').read()), float(r['gain']), '')
+            gravar(os.path.join(out, 'S00_%s.wav' % r['awb_id']), o); n += 1; continue
         vag = open(os.path.join(ps, 'b_us', 'b_us_%04d.vag' % int(r['index'])), 'rb').read()
-        o = aplicar(decodificar(vag), float(r['gain']), ''); esp = int(r['expected_samples'])
+        o = aplicar(decodificar(vag), float(r['gain']), '')
         if len(o) > esp + 28: o = o[:esp]   # same as the previously tested S00: tail cut (multiples of 1024 samples) to fit the original slot
         gravar(os.path.join(out, 'S00_%s.wav' % r['awb_id']), o); n += 1
     return n

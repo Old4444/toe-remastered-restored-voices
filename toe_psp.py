@@ -46,6 +46,15 @@ def cortar_vags(data):
         res.append((idx, pos, end, ver, rate, nome)); idx += 1; pos = end
     return res
 
+def cortar_see(data):
+    """S00.see ('SEEs'): u32 n, u32 data start, table (id, offset) of 8 bytes from 0x10; raw PS-ADPCM (22.05 kHz).
+    Returns {id: bytes} for the battle SE slots (ids 282-397 = SE_BTV_001-116)."""
+    n, ini = struct.unpack_from('<II', data, 4)
+    ent = [struct.unpack_from('<II', data, 0x10 + 8 * i) for i in range(n)]
+    offs = sorted(set(o for _, o in ent)) + [len(data) - ini]
+    fim = {o: offs[i + 1] for i, o in enumerate(offs[:-1])}
+    return {i: data[ini + o:ini + fim[o]] for i, o in ent if 282 <= i <= 397}
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__); return 2
@@ -75,6 +84,13 @@ def main():
         v4 = sum(1 for l in linhas if l[3] == 4)
         print('  %-6s %4d streams  VAG v4: %4d  %s' % (pref, len(linhas), v4, marca))
         if len(linhas) != esperado: problemas.append('%s: %d streams (expected %d)' % (pref, len(linhas), esperado))
+    arq = 'PSP_GAME/USRDIR/sndadd/S00.see'
+    if arq not in files: problemas.append('missing ' + arq)
+    else:
+        sv = cortar_see(ler_arquivo(c, *files[arq])); pasta = os.path.join(saida, 'see'); os.makedirs(pasta, exist_ok=True)
+        for i, b in sv.items(): open(os.path.join(pasta, 'see_%03d.bin' % i), 'wb').write(b)
+        print('  see    %4d slots (S00.see, ids 282-397)  %s' % (len(sv), 'OK' if len(sv) == 116 else 'MISMATCH (expected 116)'))
+        if len(sv) != 116: problemas.append('see: %d slots (expected 116)' % len(sv))
     print('3/3 Done in %.1f s. Folder: %s' % (time.time() - t0, saida))
     if problemas:
         print('\nPROBLEMS:'); print('\n'.join(' - ' + p for p in problemas)); return 1

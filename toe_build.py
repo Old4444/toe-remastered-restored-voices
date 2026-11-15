@@ -2,7 +2,7 @@
 """toe_build.py - step 3: builds the test Vo.acb / Vo.awb / S00 from the ORIGINAL game files.
 Replaces: (a) 900 battle/minigame cues (in-memory waveforms inside the .acb),
           (b) the 136 EM0200 event lines (streams in Vo.awb) and the .acb fields that depend on them,
-          (c) 36 S00 sound-effect voices (normal hit / damage), written byte-for-byte at the original size.
+          (c) 52 S00 sound-effect voices (normal hit / damage: 36 from b_us, 4 from S00.see, 12 silent), written byte-for-byte at the original size.
 Usage: python toe_build.py FOLDER_WITH_ORIGINAL_FILES OUTPUT [hca_battle] [hca_events] [recipe.csv]
 Never modifies the input files.
 """
@@ -59,7 +59,7 @@ def cortar_frames(clear, max_bytes):
     return bytes(h) + clear[hs:hs + n * fs], n
 
 def build_s00(src, out, hca_dir, wav_dir, rec):
-    """S00 (battle sound effects): 36 normal-hit/damage waveforms; replaces in-memory payloads (subkey 60381)."""
+    """S00 (battle sound effects): 52 normal-hit/damage waveforms; replaces in-memory payloads (subkey 60381)."""
     acb = open(os.path.join(src, S00), 'rb').read()
     if sha(acb) != ORIG[S00]: print('ERROR: the input S00 is not the ORIGINAL.'); return 1
     t = utf.parse(acb); R = t.rows[0]
@@ -104,14 +104,14 @@ def build_s00(src, out, hca_dir, wav_dir, rec):
     return 0
 
 def main():
-    """0.9.0: Vo.acb/Vo.awb (events EM, H skits, battle vc) + S00. Usage: toe_build.py FOLDER_WITH_ORIGINAL_FILES OUTPUT"""
+    """1.0: Vo.acb/Vo.awb (events EM, H skits, battle vc) + S00. Usage: toe_build.py FOLDER_WITH_ORIGINAL_FILES OUTPUT"""
     if len(sys.argv) < 3: print(__doc__); return 2
     src, out = sys.argv[1], sys.argv[2]
     import build090, toe_voices090 as V
     err = build090.build_vo(src, out, V.items())
     if err: print(err); return 1
     if os.path.exists(os.path.join(src, S00)):
-        return build_s00(src, out, os.path.join(WORK, 'hca_s00'), os.path.join(WORK, 'wav_s00'), os.path.join(RES, 'recipe_s00.csv'))
+        return build_s00(src, out, os.path.join(WORK, 'hca_s00'), os.path.join(WORK, 'wav_s00'), V.s00_recipe())
     print('Warning: S00 not found in ' + src + '; only Vo was built.'); return 0
 
 if __name__ == '__main__': sys.exit(main())

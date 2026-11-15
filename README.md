@@ -8,24 +8,25 @@ no game, PSP, audio, video or image file is distributed here.
 
 *Tales of Eternia is known in the US PS1 release as Tales of Destiny II. The voices restored here come from the PSP version.*
 
-**Current version:** 0.9.0 – see [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) and [STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md) for what is confirmed and what still needs testers.
+**Current version:** 1.0 – the final and most complete version *(updates only if serious bugs appear; no promises)*. See [Releases](https://github.com/Old4444/toe-remastered-restored-voices/releases) and [STATUS.md](https://github.com/Old4444/toe-remastered-restored-voices/blob/main/STATUS.md) for what is confirmed and what still needs testers.
 
 ## About this release
 
-Version 0.9.0 is the first stable release of this project, but it is **not** meant to be a definitive or 100% accurate restoration.
+Version 1.0 is the **final and most complete** version of this project. The maintainer finished the game with it and tested it throughout. It is still **not** meant to be a 100% accurate restoration.
 The project is partly driven by childhood memories of the original game. Extensive research, file analysis and in-game testing went into it,
 but some details may still be inaccurate or incomplete: there may be voice lines, mappings or other original-version details that have not been identified or verified yet.
 The goal is to get as close as possible to the original English voice experience, and to improve the restoration as much as I can with the time and resources available.
 
 ## What it restores
 
-- **All story events:** 1,346 voice lines in 36 event groups.
+- **All story events:** 1,347 voice lines in 36 event groups.
 - **All original skits (the hint skits that tell you where to go):** 79 skits (H001–H079).
-- **All battle and minigame voices** in the game's voice bank (`Vo.acb`): 902 cues – 869 with the PSP voice and 33 deliberately muted (no matching line, or silent on the PSP) – plus the **36 hit/damage voices** of the sound-effect bank (S00). Summons included.
+- **All battle and minigame voices** in the game's voice bank (`Vo.acb`): 946 cues – 868 with the PSP voice and 78 deliberately muted (no matching line, or silent on the PSP) – plus the **hit/damage sounds** of the sound-effect bank (S00): 52 slots, 40 with the PSP sound and 12 silent. Summons included.
 - In total, **more than 2,300 voice lines** replaced.
 - **Cutscene movies 01 (English), 15 and 24**: the sound is replaced with the PSP sound (the video is untouched).
 - **The original opening video**, rebuilt from the opening already in your game plus the PSP audio.
 - **Setting: mute the skits that exist only in the remaster.** These skits have no English PSP voice. The installer asks about it and the answer is **yes by default**; you can choose *no* to keep the remaster voice in them. *Side effect of muting:* in those skits the characters' mouths stay closed and some expressions may look odd.
+- **Setting: mute Cless, Arche, Sekundes and Valkyrie.** The PSP has no voice or sound for them in battle (Cless, Arche and Sekundes are silent; Valkyrie only has hit/damage sounds, which are restored). The installer asks about each of the four; the answer is **yes (muted) by default**, as in the PSP. Answer *no* to keep the remaster voices and sounds for that character.
 
 The patcher also **alters the game's title logo** (it shows the patch's name and version); this is not part of the voice restoration.
 
@@ -43,7 +44,7 @@ so a restored line can differ slightly from the subtitle on screen.
 2. *(Only for option 1)* Download an LGPL build of **ffmpeg** for Windows – for example `ffmpeg-n9.0-latest-win64-lgpl-9.0.zip` from
    [BtbN/FFmpeg-Builds](https://github.com/BtbN/FFmpeg-Builds/releases/latest) (choose `win64`, **not** `winarm64`). **You only need one file:** extract the zip, take `bin\ffmpeg.exe` and put that `ffmpeg.exe` **right next to `ToePatcher.exe`** (the other files in the zip are not needed). If you prefer, leave it anywhere and select it when the patcher asks. ffmpeg is **not included** in this download.
 3. Run `ToePatcher.exe` and choose:
-   - **1 – INSTALL, complete:** voices + title logo + cutscene movies + original opening. Needs ffmpeg and takes about **2 to 8 minutes**, depending on your PC.
+   - **1 – INSTALL, complete:** voices + title logo + cutscene movies + original opening. Needs ffmpeg and takes about **5 to 10 minutes**, depending on your PC.
    - **2 – INSTALL, without videos:** voices + title logo only. No ffmpeg needed.
 4. A window asks for your PSP `.iso` / `.cso` (European release, ULES-00176). The patcher checks it, extracts the voices, encodes them and installs. **Backups of the original files are made first.**
 5. Start the game.
@@ -81,6 +82,9 @@ They are copyrighted game material. The patcher extracts them from a disc image 
 
 **Where do I get the disc image?**
 I can't help with that, and I'll remove any request or link to one.
+
+**Cless, Arche, Sekundes or Valkyrie make no sound in battle.**
+That is how the PSP is: the installer mutes them by default. Run it again and answer *no* for that character to hear the remaster sounds (restore first if you already installed).
 
 **Does it change the text?**
 No. Only voices, movie/opening audio and the title logo (which is altered).

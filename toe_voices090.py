@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
-"""toe_voices090.py - regenera do zero (a partir do PSP do proprio usuario) as vozes de evento EM (1346), skits H (79),
-batalha vc (902) e S00 (36): decodifica -> WAV -> VGAudio -> HCA. Nada de audio do jogo/PSP e distribuido: so receitas (numeros e hashes)."""
+"""toe_voices090.py - regenera do zero (a partir do PSP do proprio usuario) as vozes de evento EM (1347), skits H (79),
+batalha vc (946) e S00 (52): decodifica -> WAV -> VGAudio -> HCA. Nada de audio do jogo/PSP e distribuido: so receitas (numeros e hashes)."""
 import os, io, csv, sys, wave, struct, hashlib, subprocess
 from concurrent.futures import ThreadPoolExecutor
 from toe_paths import RES, WORK
 from psx_decode import decode_adpcm
 RATE = 44100
 sha = lambda b: hashlib.sha256(b).hexdigest()
-FAM = (('events', 1346), ('h', 79), ('battle', 902), ('s00', 36))
+UNMUTE = set()   # groups (cless, arche, sekundes, valkyrie) the user chose NOT to mute: their cues keep the remaster audio
+GRUPOS = ('cless', 'arche', 'sekundes', 'valkyrie')
+FAM = (('events', 1347), ('h', 79), ('battle', 946), ('s00', 52))
 
 def _wav(path, pcm):
     b = io.BytesIO(); w = wave.open(b, 'wb'); w.setnchannels(1); w.setsampwidth(2); w.setframerate(RATE)
     w.writeframes(struct.pack('<%dh' % len(pcm), *pcm)); w.close(); data = b.getvalue()
+    try:
+        if os.path.isfile(path) and open(path, 'rb').read() == data: return data   # unchanged: keep the file (and its date) so the HCA is not re-encoded
+    except OSError: pass
     open(path, 'wb').write(data); return data
 
 def _csv(nome, enc='utf-8'): return list(csv.DictReader(open(os.path.join(RES, nome), encoding=enc)))
@@ -68,13 +73,31 @@ def encode(vgaudio):
 
 def counts():
     out = []
-    for h, n in (('hca_events', 1346), ('hca_h', 79), ('hca_battle', 902), ('hca_s00', 36)):
+    for h, n in (('hca_events', 1347), ('hca_h', 79), ('hca_battle', 946), ('hca_s00', 52)):
         p = os.path.join(WORK, h); out.append((h, len([f for f in os.listdir(p) if f.endswith('.hca')]) if os.path.isdir(p) else 0, n))
     return out
+
+def _skip(tipo):
+    """IDs (cue names) of the optional-mute groups the user chose to leave in the remaster."""
+    if not UNMUTE: return set()
+    return {r['id'] for r in _csv('OPCOES_MUDOS.csv') if r['grupo'] in UNMUTE and r['tipo'] == tipo}
+
+def s00_recipe():
+    """recipe_s00.csv path; if some group stays unmuted, writes a filtered copy (those S00 slots keep the remaster audio)."""
+    rec = os.path.join(RES, 'recipe_s00.csv'); sk = _skip('s00')
+    if not sk: return rec
+    rows = _csv('recipe_s00.csv', 'utf-8-sig'); keep = [r for r in rows if not (set(r['cues'].split(';')) & sk)]
+    p = os.path.join(WORK, 'recipe_s00_efetivo.csv')
+    with open(p, 'w', newline='', encoding='utf-8') as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys())); w.writeheader(); w.writerows(keep)
+    return p
 
 def items():
     it = []
     for r in _csv('RECEITA_EVENTOS.csv'): it.append((r['evento_id'], os.path.join(WORK, 'hca_events', r['evento_id'] + '.hca'), os.path.join(WORK, 'wav_events', r['evento_id'] + '.wav')))
     for r in _csv('RECEITA_H.csv'): it.append((r['cue'], os.path.join(WORK, 'hca_h', r['cue'] + '.hca'), os.path.join(WORK, 'wav_h', r['cue'] + '.wav')))
-    for r in _csv('RECEITA_BATALHA_090.csv'): it.append((r['cue'], os.path.join(WORK, 'hca_battle', r['cue'] + '.hca'), os.path.join(WORK, 'wav_battle', r['cue'] + '.wav')))
+    sk = _skip('vo')
+    for r in _csv('RECEITA_BATALHA_090.csv'):
+        if r['cue'] in sk: continue
+        it.append((r['cue'], os.path.join(WORK, 'hca_battle', r['cue'] + '.hca'), os.path.join(WORK, 'wav_battle', r['cue'] + '.wav')))
     return it

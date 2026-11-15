@@ -14,7 +14,7 @@ python -m PyInstaller --noconfirm --clean --onefile --console --name ToePatcher 
  --hidden-import toe_extras --hidden-import toe_videos --hidden-import toe_abertura --hidden-import usm_own --hidden-import usm_templates ^
  --hidden-import toe_voices090 --hidden-import toe_build --hidden-import build090 --hidden-import toe_install --hidden-import toe_logo ^
  --hidden-import toe_psp --hidden-import toe_audio --hidden-import psx_decode ^
- --add-data "RECEITA_EVENTOS.csv;." --add-data "RECEITA_H.csv;." --add-data "RECEITA_BATALHA_090.csv;." --add-data "recipe_s00.csv;." ^
+ --add-data "RECEITA_EVENTOS.csv;." --add-data "RECEITA_H.csv;." --add-data "RECEITA_BATALHA_090.csv;." --add-data "recipe_s00.csv;." --add-data "OPCOES_MUDOS.csv;." ^
  --add-data "RECEITA_VIDEOS_090.csv;." --add-data "edl_final.json;." ^
  --add-data "fonts;fonts" --add-data "tools;tools" %EXTRA% toe_patcher.py
 if errorlevel 1 (echo BUILD FAILED & pause & exit /b 1)

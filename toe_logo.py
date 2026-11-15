@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""toe_logo.py - title-screen logo: RESTORED + "v0.9.0" instead of the version text, compass ball at 75 percent.
+"""toe_logo.py - title-screen logo: RESTORED + "v1.0.0" instead of the version text, compass ball at 75 percent.
 Usage: python toe_logo.py generate|install|restore [--game "folder"]
 Needs: pip install numpy UnityPy pillow (on your computer only; nothing is distributed).
 Reads the ORIGINAL textures from your own game bundles; no game image is included in this package.
@@ -10,7 +10,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from toe_paths import RES, WORK
 sys.path.insert(0, os.path.join(RES, 'lib'))
 from seyfert import transform as bola
-TEXTO = 'v0.9.0'
+TEXTO = 'v1.0.0'
+O_DO_OF = False   # True = the "O" of RESTORED is built from the "o" of "of" (left half mirrored) instead of the mirrored D
 IDS = ['0x0801004f', '0x08010050', '0x08010051', '0x08010052', '0x08010053', '0x08010054', '0x08010057']
 ID_BOLA = '0x08010058'
 # hashes dos pacotes ORIGINAIS: (jogo 2.0.0, jogo 2.1.0). O de 2.1.0 foi tirado dos arquivos atualizados pela Steam em 2026-11-02 (nao verificado por 'Verificar integridade').
@@ -34,6 +35,12 @@ def compor(im, texto=TEXTO):
     w = D.size[0]; half = w // 2; Dm = D.transpose(Image.FLIP_LEFT_RIGHT)
     O = Image.new('RGBA', (half * 2 - 2, D.size[1]), (0, 0, 0, 0))
     O.alpha_composite(Dm.crop((0, 0, half, D.size[1])), (0, 0)); O.alpha_composite(D.crop((half, 0, w, D.size[1])), (half - 2, 0))
+    if O_DO_OF:
+        lh = im.crop((788, 118, 848, 362)); hw = lh.size[0]; ot = Image.new('RGBA', (hw * 2 - 2, lh.size[1]), (0, 0, 0, 0))
+        ot.alpha_composite(lh, (0, 0)); ot.alpha_composite(lh.transpose(Image.FLIP_LEFT_RIGHT), (hw - 2, 0))
+        f = 86 / 236.0   # glyph height of the "o" (236 px) -> glyph height of the REMASTERED capitals (86 px, rows 8-93 of the crop)
+        sm = prem_resize(ot, (int(round(ot.size[0] * f)), int(round(ot.size[1] * f))))
+        O = Image.new('RGBA', (sm.size[0], RE.size[1]), (0, 0, 0, 0)); O.alpha_composite(sm, (0, int(round(8 - 4 * f))))
     gap = -3; parts = [RE, ST, O, RED]
     W = sum(p.size[0] for p in parts) + gap * 3; H = RE.size[1]
     RS = Image.new('RGBA', (W, H), (0, 0, 0, 0)); x = 0

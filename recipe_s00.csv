@@ -35,3 +35,19 @@ awb_id,waveform,bank,index,psp_name,gain,expected_samples,cues,status
 489,190,b_us,513,Max_023,1.0,18536,RE_SE_BTV_026;SE_BTV_026,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer
 562,191,b_us,514,Max_024,1.0,12824,RE_SE_BTV_027;SE_BTV_027,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer
 563,192,b_us,515,Max_025,1.0,19432,RE_SE_BTV_028;SE_BTV_028,BY_SOUND_TEST_LABEL(normal attack); Max block confirmed in game by the maintainer
+553,269,mudo,,mudo,1.0,22656,SE_BTV_105,MUDO: slot vazio no PSP (0.03 s); bloco 105-108 = dono desconhecido (Arche por eliminacao); decidido pelo usuario apos videos de batalha
+555,270,mudo,,mudo,1.0,19460,SE_BTV_106,MUDO: slot vazio no PSP (0.03 s); bloco 105-108 = dono desconhecido (Arche por eliminacao); decidido pelo usuario apos videos de batalha
+554,271,mudo,,mudo,1.0,13007,SE_BTV_107,MUDO: slot vazio no PSP (0.03 s); bloco 105-108 = dono desconhecido (Arche por eliminacao); decidido pelo usuario apos videos de batalha
+556,272,mudo,,mudo,1.0,10594,SE_BTV_108,MUDO: slot vazio no PSP (0.03 s); bloco 105-108 = dono desconhecido (Arche por eliminacao); decidido pelo usuario apos videos de batalha
+574,273,mudo,,mudo,1.0,8969,SE_BTV_109,MUDO: slot vazio no PSP (0.03 s); bloco 109-112 = Cless; decidido pelo usuario apos videos de batalha
+575,274,mudo,,mudo,1.0,17544,SE_BTV_110,MUDO: slot vazio no PSP (0.03 s); bloco 109-112 = Cless; decidido pelo usuario apos videos de batalha
+576,275,mudo,,mudo,1.0,16858,SE_BTV_111,MUDO: slot vazio no PSP (0.03 s); bloco 109-112 = Cless; decidido pelo usuario apos videos de batalha
+577,276,mudo,,mudo,1.0,13084,SE_BTV_112,MUDO: slot vazio no PSP (0.03 s); bloco 109-112 = Cless; decidido pelo usuario apos videos de batalha
+580,277,mudo,,mudo,1.0,18973,SE_BTV_113,MUDO: slot vazio no PSP (0.03 s); bloco 113-116 = Sekundes; decidido pelo usuario apos videos de batalha
+581,278,mudo,,mudo,1.0,21168,SE_BTV_114,MUDO: slot vazio no PSP (0.03 s); bloco 113-116 = Sekundes; decidido pelo usuario apos videos de batalha
+578,279,mudo,,mudo,1.0,15597,SE_BTV_115,MUDO: slot vazio no PSP (0.03 s); bloco 113-116 = Sekundes; decidido pelo usuario apos videos de batalha
+579,280,mudo,,mudo,1.0,27281,SE_BTV_116,MUDO: slot vazio no PSP (0.03 s); bloco 113-116 = Sekundes; decidido pelo usuario apos videos de batalha
+551,249,see,366,S00.see:366,1.0,7168,SE_BTV_085,SEE_PSP: Valkyrie hit/damage (so existe no S00.see); confirmado de ouvido pelo usuario
+552,250,see,367,S00.see:367,1.0,9632,SE_BTV_086,SEE_PSP: Valkyrie hit/damage (so existe no S00.see); confirmado de ouvido pelo usuario
+549,251,see,368,S00.see:368,1.0,9184,SE_BTV_087,SEE_PSP: Valkyrie hit/damage (so existe no S00.see); confirmado de ouvido pelo usuario
+550,252,see,369,S00.see:369,1.0,10528,SE_BTV_088,SEE_PSP: Valkyrie hit/damage (so existe no S00.see); confirmado de ouvido pelo usuario

@@ -2,7 +2,7 @@
 """toe_patcher.py - single entry point of the Tales of Eternia Remastered "Restored English Voices" patcher.
 Run it with Python (python toe_patcher.py) or as the compiled ToePatcher.exe. It only uses YOUR files:
 your Steam game and your own PSP disc image. Nothing is uploaded; nothing is distributed.
-Command line (optional):  toe_patcher.py install [--no-mute] [--opening] [--no-movies] [--disc FILE] [--ffmpeg FILE] [--game FOLDER] | restore | status | prepare "game.iso" | install-voices | logo-install | logo-restore | clean
+Command line (optional):  toe_patcher.py install [--no-mute] [--keep-voices cless,arche,sekundes,valkyrie] [--opening] [--no-movies] [--disc FILE] [--ffmpeg FILE] [--game FOLDER] | restore | status | prepare "game.iso" | install-voices | logo-install | logo-restore | clean
 """
 import os, sys, shutil, subprocess, hashlib
 from concurrent.futures import ThreadPoolExecutor
@@ -61,14 +61,29 @@ def encode_all():
 def counts():
     return V090.counts()
 
+STAMP = os.path.join(WORK, 'preparation_recipes.sha')
+RECIPES = ('RECEITA_EVENTOS.csv', 'RECEITA_H.csv', 'RECEITA_BATALHA_090.csv', 'recipe_s00.csv')
+
+def recipes_stamp():
+    """SHA-256 of the recipe tables. A preparation made with other recipes (or by an older version) must not be reused."""
+    h = hashlib.sha256(b'toe-1.0')
+    for f in RECIPES: h.update(open(os.path.join(RES, f), 'rb').read())
+    return h.hexdigest()
+
+def stamp_ok():
+    try: return open(STAMP).read().strip() == recipes_stamp()
+    except OSError: return False
+
 def prepared():
-    return all(c == n for _, c, n in counts())
+    return all(c == n for _, c, n in counts()) and stamp_ok()
 
 def prepare(disc=None):
     import toe_psp, toe_audio
     if prepared():
         a = input('A previous preparation was found. Reuse it? [Y/n] ').strip().lower()
         if a in ('', 'y', 'yes'): return True
+    elif all(c == n for _, c, n in counts()):
+        print('A previous preparation was found, but it was made with different recipes (an older version of this patcher). It will be redone.')
     disc = get_disc(disc)
     if not disc or not os.path.isfile(disc): print('ERROR: file not found: ' + disc); return False
     print('\nSTEP 1/3 - extracting the voices from your disc image')
@@ -79,6 +94,7 @@ def prepare(disc=None):
     print('\nSTEP 3/3 - encoding')
     if not encode_all(): return False
     for h, c, n in counts(): print('  %-11s %4d files (expected %d)%s' % (h, c, n, '' if c == n else '  <-- MISMATCH'))
+    if all(c == n for _, c, n in counts()): open(STAMP, 'w').write(recipes_stamp())
     return prepared()
 
 
@@ -127,6 +143,8 @@ def clean():
     print('Your game files, the backups (*.PRE_PATCH_TEST, backup_logo) and your disc image are NOT touched.')
     if input('Delete them? [y/N] ').strip().lower() not in ('y', 'yes'): return 0
     for d in found: shutil.rmtree(os.path.join(WORK, d), ignore_errors=True)
+    try: os.remove(STAMP)
+    except OSError: pass
     print('Done.'); return 0
 
 def logo_safe(cmd, *extra):
@@ -134,9 +152,10 @@ def logo_safe(cmd, *extra):
     except Exception as e: print('Logo step failed: %s' % e); return 1
 
 def parse_opts(args):
-    o = {'mute': True, 'opening': False, 'movies': True, 'disc': None, 'ffmpeg': None}; rest = []; it = iter(args)
+    o = {'mute': True, 'keep': [], 'opening': False, 'movies': True, 'disc': None, 'ffmpeg': None}; rest = []; it = iter(args)
     for x in it:
         if x == '--no-mute': o['mute'] = False
+        elif x == '--keep-voices': o['keep'] = [g for g in next(it).lower().split(',') if g in V090.GRUPOS]
         elif x == '--opening': o['opening'] = True
         elif x == '--no-movies': o['movies'] = False
         elif x == '--disc': o['disc'] = next(it)
@@ -182,8 +201,9 @@ def install_all(*args):
         ff = o['ffmpeg'] or toe_extras.find_ffmpeg()
         if not ff:
             print('\nffmpeg was not provided, so NOTHING was installed. Place the ffmpeg folder next to this program and run again, or choose "INSTALL without videos" in the menu.'); return 1
-    toe_install.MUTE = o['mute']; toe_install.VGAUDIO = v
+    toe_install.MUTE = o['mute']; toe_install.VGAUDIO = v; V090.UNMUTE = set(o['keep'])
     print('\nOptions: mute remaster-only skits = %s | cutscene movie audio = %s | restored opening = %s | title-logo change = always' % tuple('ON' if x else 'off' for x in (o['mute'], o['movies'], o['opening'])))
+    print('Cless / Arche / Sekundes / Valkyrie voices + hit/damage sounds: ' + (', '.join('%s=%s' % (g.capitalize(), 'remaster (not muted)' if g in o['keep'] else 'muted (as in the PSP)') for g in V090.GRUPOS)))
     print('\n--- Voices ---')
     rv = install(*rest)
     if rv: print('\nThe voices were NOT installed, so the other steps were skipped.'); return rv
@@ -260,6 +280,10 @@ def main():
         if k in ('1', '2'):
             extra = []
             if not ask_yn('Mute the new skits that only exist in the remaster (they have no English PSP voice)?', True): extra.append('--no-mute')
+            print('\nCless, Arche, Sekundes and Valkyrie have no English voice in the PSP: they are silent there (voices and hit/damage sounds).')
+            print('Muting them is faithful to the original; keeping them leaves the remaster sounds, which some people prefer.')
+            keep = [g for g in V090.GRUPOS if not ask_yn('Mute %s?' % g.capitalize(), True)]
+            if keep: extra += ['--keep-voices', ','.join(keep)]
             extra += ['--opening'] if k == '1' else ['--no-movies']
             install_all(*extra)
         elif k == '3': restore_all()
